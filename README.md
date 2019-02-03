@@ -1,3 +1,9 @@
+NOTE from Jiande: on 02/02/2019 updated to GFDL master:
+commit cf12a97a730e6cc5e38a3b92cb9f698dfcf2420c
+Author: Seth Underwood <underwoo@underwoo.io>
+Date:   Tue May 29 13:10:09 2018 -0400
+-----------------------------------------------------------------
+
 [![Build Status](https://travis-ci.org/NOAA-GFDL/mkmf.svg?branch=master)](https://travis-ci.org/underwoo/mkmf)
 
 Disclaimer

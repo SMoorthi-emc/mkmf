@@ -1,14 +1,13 @@
-# Template for the Cray CCE Compilers on a Cray System
+# Template for the GNU Compiler Collection on Trusty version of Ubuntu Linux systems (used by Travis-CI)
 #
 # Typical use with mkmf
-# mkmf -t ncrc-cray.mk -c"-Duse_libMPI -Duse_netCDF" path_names /usr/local/include
+# mkmf -t linux-ubuntu-trusty-gnu.mk -c"-Duse_libMPI -Duse_netCDF" path_names /usr/local/include
 
 ############
-# Commands Macros
-############
-FC = ftn
-CC = cc
-LD = ftn $(MAIN_PROGRAM)
+# Commands Macors
+FC = mpif90
+CC = mpicc
+LD = mpif90 $(MAIN_PROGRAM)
 
 #######################
 # Build target macros
@@ -79,21 +78,21 @@ endif
 MAKEFLAGS += --jobs=$(shell grep '^processor' /proc/cpuinfo | wc -l)
 
 # Macro for Fortran preprocessor
-FPPFLAGS = $(INCLUDES)
+FPPFLAGS := $(INCLUDES)
 # Fortran Compiler flags for the NetCDF library
-FPPFLAGS += $(shell nf-config --fflags)
+FPPFLAGS += $(shell nc-config --fflags)
 
 # Base set of Fortran compiler flags
-FFLAGS = -s real64 -s integer32 -h byteswapio -h nosecond_underscore -e m -h keepfiles -e0 -ez -N1023
+FFLAGS := -fcray-pointer -fdefault-double-8 -fdefault-real-8 -Waliasing -ffree-line-length-none -fno-range-check
 
 # Flags based on perforance target (production (OPT), reproduction (REPRO), or debug (DEBUG)
-FFLAGS_OPT = -O3 -O fp2 -G2
-FFLAGS_REPRO = -O2 -O fp2 -G2
-FFLAGS_DEBUG = -g -R bc
+FFLAGS_OPT = -O3
+FFLAGS_REPRO = -O2 -fbounds-check
+FFLAGS_DEBUG = -O0 -g -W -fbounds-check -fbacktrace -ffpe-trap=invalid,zero,overflow
 
 # Flags to add additional build options
-FFLAGS_NOOPENMP = -h noomp
-FFLAGS_VERBOSE = -e o -v
+FFLAGS_OPENMP = -fopenmp
+FFLAGS_VERBOSE =
 FFLAGS_COVERAGE =
 
 # Macro for C preprocessor
@@ -102,16 +101,16 @@ CPPFLAGS = $(INCLUDES)
 CPPFLAGS += $(shell nc-config --cflags)
 
 # Base set of C compiler flags
-CFLAGS =
+CFLAGS := -D__IFC
 
 # Flags based on perforance target (production (OPT), reproduction (REPRO), or debug (DEBUG)
 CFLAGS_OPT = -O2
 CFLAGS_REPRO = -O2
-CFLAGS_DEBUG = -g
+CFLAGS_DEBUG = -O0 -g
 
 # Flags to add additional build options
-CFLAGS_NOOPENMP = -h noomp
-CFLAGS_VERBOSE = -v -h display_opt
+CFLAGS_OPENMP = -fopenmp
+CFLAGS_VERBOSE =
 CFLAGS_COVERAGE =
 
 # Optional Testing compile flags.  Mutually exclusive from DEBUG, REPRO, and OPT
@@ -120,13 +119,15 @@ FFLAGS_TEST = $(FFLAGS_OPT)
 CFLAGS_TEST = $(CFLAGS_OPT)
 
 # Linking flags
-LDFLAGS := -h byteswapio
-LDFLAGS_NOOPENMP :=
-LDFLAGS_VERBOSE := -v
+LDFLAGS :=
+LDFLAGS_OPENMP := -fopenmp
+LDFLAGS_VERBOSE :=
 LDFLAGS_COVERAGE :=
 
 # Start with a blank LIBS
 LIBS =
+# NetCDF library flags
+LIBS += $(shell nc-config --flibs)
 
 # Get compile flags based on target macros.
 ifdef REPRO
@@ -143,10 +144,10 @@ CFLAGS += $(CFLAGS_OPT)
 FFLAGS += $(FFLAGS_OPT)
 endif
 
-ifndef OPENMP
-CFLAGS += $(CFLAGS_NOOPENMP)
-FFLAGS += $(FFLAGS_NOOPENMP)
-LDFLAGS += $(LDFLAGS_NOOPENMP)
+ifdef OPENMP
+CFLAGS += $(CFLAGS_OPENMP)
+FFLAGS += $(FFLAGS_OPENMP)
+LDFLAGS += $(LDFLAGS_OPENMP)
 endif
 
 ifdef SSE

@@ -19,7 +19,7 @@ DEBUG =
 REPRO =
 VERBOSE =
 OPENMP = 
-OPENMP = Y
+#OPENMP = Y
 
 MAKEFLAGS += --jobs=1
 
@@ -40,6 +40,7 @@ FFLAGS_DEBUG = -g -O0 -check -check noarg_temp_created -check nopointer -warn -w
 FFLAGS_DEBUG = -g -O0 -traceback 
 FFLAGS_REPRO = -O2 -debug minimal -fp-model source
 #FFLAGS_REPRO = -O2 -debug minimal -fp-model source -override-limits
+#FFLAGS_REPRO = -g -O0 -check -check noarg_temp_created -check nopointer -warn -warn noerrors -fpe0 -ftrapuv
 FFLAGS_OPENMP = -qopenmp
 FFLAGS_VERBOSE = -v -V -what
 

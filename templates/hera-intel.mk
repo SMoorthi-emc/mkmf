@@ -93,7 +93,8 @@ FFLAGS := -fno-alias -auto -safe-cray-ptr -ftz -assume byterecl -i4 -r8 -nowarn 
 # Flags based on perforance target (production (OPT), reproduction (REPRO), or debug (DEBUG)
 FFLAGS_OPT = -O3 -debug minimal -fp-model source -axcore-avx512
 FFLAGS_REPRO = -O2 -debug minimal -fp-model source
-FFLAGS_DEBUG = -g -O0 -check -check noarg_temp_created -check nopointer -warn -warn noerrors -fpe0 -ftrapuv
+#FFLAGS_REPRO = -g -O0 -check -check noarg_temp_created -check nopointer -warn -warn noerrors -fpe0 -ftrapuv
+FFLAGS_DEBUG = -g -O0 -check -check noarg_temp_created -check nopointer -warn -warn noerrors -fpe0 -ftrapuv -link_mpi=dbg
 
 # Flags to add additional build options
 FFLAGS_OPENMP = -qopenmp
@@ -136,7 +137,8 @@ LIBS += $(shell nf-config --flibs)
 # HDF5 library flags
 # NESCC system's HDF5 modulefiles set $HDF5 to the root directory of the HDF5
 # development libraries
-HDF5=/scratch1/NCEPDEV/global/gwv/l819/lib/EXTERNAL/LOCAL_EXTERN/hdf5-1.8.18
+#HDF5=/scratch1/NCEPDEV/global/gwv/l819/lib/EXTERNAL/LOCAL_EXTERN/hdf5-1.8.18
+HDF5=/scratch2/NCEPDEV/nwprod/NCEPLIBS/src/netcdf_parallel
 LIBS += -L$(HDF5)/lib -lhdf5_hl -lhdf5 -lz
 # Intel Math Kernel Library (MKL) flags
 LIBS += -lmkl_blas95_lp64 -lmkl_lapack95_lp64 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential

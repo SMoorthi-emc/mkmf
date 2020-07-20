@@ -27,7 +27,7 @@ FPPFLAGS := -fpp -Wp,-w
 FFLAGS := -fno-alias -auto -safe-cray-ptr -ftz -assume byterecl -i4 -r8 -nowarn -sox -traceback $(INC)
 FFLAGS_OPT = -O3 -debug minimal -fp-model source
 #FFLAGS_OPT = -O3 -debug minimal -fp-model source -override-limits
-FFLAGS_DEBUG = -g -O0 -check -check noarg_temp_created -check nopointer -warn -warn noerrors -fpe0 -ftrapuv
+FFLAGS_DEBUG = -g -O0 -check -check noarg_temp_created -check nopointer -warn -warn noerrors -fpe0 -ftrapuv -link_mpi=dbg
 FFLAGS_DEBUG = -g -O0 -traceback -link_mpi=dbg
 FFLAGS_REPRO = -O2 -debug minimal -fp-model source
 #FFLAGS_REPRO = -O2 -debug minimal -fp-model source -override-limits
